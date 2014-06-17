@@ -1,0 +1,4 @@
+Scratch work / exploratory graphs / rough conclusions re: Motor Trend MPG data analysis
+===================================
+
+## things to go here

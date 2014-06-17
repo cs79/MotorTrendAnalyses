@@ -1,0 +1,24 @@
+Motor Trend Analysis of MPG covariates between Manual and Automatic Transmission Cars
+(think of a better title)
+=================================================================
+
+## Executive Summary
+
+## Exploration
+
+detail the summary of what was done, but don't put a lot of graphics here -- maybe a couple of important ones; put the rest in the annex
+
+## Model Selection
+
+explain why the model chosen was the one chosen
+
+## Analysis and Conclusions
+
+interpret the coefficients correctly; answer the 2 questions of interest; quantify the uncertainty in conclusions
+
+## Ex-post Diagnostics
+
+residual plot, other diagnostics - think about this
+
+## make sure not missing anything else from grading rubric
+
