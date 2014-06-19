@@ -45,3 +45,15 @@ abline(lmobvious, lwd=2)
 
 Analysis: the basic model provides a basic answer, there is a clearly significant effect.  However, we probably care not so much that there is a general effect, but what OTHER variables relate to this.  Work from this as the starting point, then get fancier with the multivariate regression analysis using something like ANOVA to determine a reasonable model that accounts for other features of the data without "overfitting", essentially.  OCCAM's RAZOR.
 
+
+summary(lm(mpg~disp*am + carb*am, data=testcopy))
+
+for interaction, the Intercept is auto intcpt, intercept + am1 is manual intctp, disp is auto displ slope, disp + disp:am1 is manual disp slope; etc. for the third
+
+basically i think the "approach" might be a combination of winnowing a few factors with ANOVA without considering the interaction, since the terms that we're winnowing have already been "explored" to have the kind of relationship we're looking for.  Then once winnowed to the top 2-3, do the interaction on those and interpret the coefficients. 
+MAIN THING NEEDED HERE IF THIS APPROACH IS USED: proper ANOVA, and proper interpretation of P-values for interacted terms.
+
+Counter-argument: starting the wrong way; don't trust visual exploration / quick lms -- more robustly look at individual interactions and see which are ACTUALLY significant, not just "close" or "look like they might be", and then build up a model from there on that basis using ANOVA.  
+
+Not sure which is the right approach here; maybe just do the first one since I've already started, and in "conclusions" or whatever note the other way to do it; but BOTTOM LINE is keep the question in mind and make sure it has been answered -- there may be another answer that some one else thinks is more "analytically correct", but does MY answer also provide something useful?  this is important to remember
+
