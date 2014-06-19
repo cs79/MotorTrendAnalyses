@@ -57,12 +57,11 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <h1>Motor Trend Analysis of MPG covariates between Manual and Automatic Transmission Cars (think of a better title)</h1>
 <div id="executive-summary" class="section level2">
 <h2>Executive Summary</h2>
-<p>Broadest conclusion (yes there is an association between transmision type and MPG); sumary of breakdown by features that impact this relationship.</p>
+<p>[Broadest conclusion (yes there is an association between transmision type and MPG); sumary of breakdown by features that impact this relationship. - 1 Paragraph]</p>
 </div>
 <div id="exploration" class="section level2">
 <h2>Exploration</h2>
 <p>Before embarking on our deeper analysis and drawing conclusions from our data, we can start with some exploration to gain some basic understanding of the MPG covariates and glean hints of some of the relationships that may exist in the data.</p>
-<p>[detail the summary of what was done, but don’t put a lot of graphics here – maybe a couple of important ones; put the rest in the annex]</p>
 <div id="starting-from-the-beginning-looking-at-mpg-and-transmission-type" class="section level3">
 <h3>Starting from the beginning: Looking at MPG and transmission type</h3>
 <p>Since our questions of interest relate to potential differences in cars’ MPG by car transmission type (automatic or manual), we start with these two variables. Plotting MPG against transmission type and fitting a linear model shows a significant difference between the slope and zero, as seen in the R output below. This is equivalent to testing the hypothesis that the means of MPG between the transmission types are significantly different from one another, which is clear in <strong>Figure 1</strong> in the Appendix. The slope here is interpreted as the increase in expected MPG, going from an automatic transmission (am=0 in the dataset) to a manual transmission (am=1 in the dataset).</p>
@@ -80,27 +79,28 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </div>
 <div id="model-selection" class="section level2">
 <h2>Model Selection</h2>
-<p>[explain why the model chosen was the one chosen]</p>
-<div id="building-our-models" class="section level3">
-<h3>Building our models</h3>
+<p>There are two broad approaches we could take to building models, based on our exploration so far. The first approach involves focusing on the variables which most significantly affect MPG in a multivariate analysis and then modeling the interaction of transmission type with those variables to see its effect on MPG through them. The second approach would be to focus on the non-MPG variables that have the most significant interaction with the transmission variable, and then model based on those. We will use the first approach to keep our focus on the outcome of interest (MPG), with the understanding that the second may provide additional insights if performed as well.</p>
+<div id="building-our-models-variable-winnowing" class="section level3">
+<h3>Building our models: variable winnowing</h3>
 <p>based on exploration, we can “guess” at the order in which variables might have importance; we can build some “adjusted” and “unadjusted” models here</p>
 <p>***Think about how interactions work here… is “am” a dummy variable? seems like it should be.</p>
 </div>
-<div id="model-selection-1" class="section level3">
-<h3>Model selection</h3>
+<div id="model-selection-with-interactions" class="section level3">
+<h3>Model selection with interactions</h3>
 <p><using ANOVA or similar method based on prior section ?></p>
+<p>clearly denote “final model”</p>
 </div>
 </div>
 <div id="analysis-and-conclusions" class="section level2">
 <h2>Analysis and Conclusions</h2>
-<p>interpret the coefficients of the multivariate model correctly; reiterate the answer to the 2 questions of interest; quantify the uncertainty in conclusions <how to do this? CI?></p>
+<p>interpret the coefficients of the final multivariate model correctly; reiterate the answer to the 2 questions of interest; quantify the uncertainty in conclusions <how to do this? CI?></p>
 </div>
 <div id="ex-post-diagnostics" class="section level2">
 <h2>Ex-post Diagnostics</h2>
 <p>residual plot, other diagnostics - think about this</p>
 </div>
-<div id="make-sure-not-missing-anything-else-from-grading-rubric" class="section level2">
-<h2>[make sure not missing anything else from grading rubric!]</h2>
+<div id="make-sure-not-missing-anything-else-from-grading-rubric---put-github-repo-link-here-maybe-or-at-top-of-appendix" class="section level2">
+<h2>[make sure not missing anything else from grading rubric!] - put github repo link here maybe, or at top of appendix</h2>
 </div>
 <div id="appendix-graphical-figures" class="section level2">
 <h2>Appendix: Graphical Figures</h2>

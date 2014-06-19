@@ -57,3 +57,25 @@ Counter-argument: starting the wrong way; don't trust visual exploration / quick
 
 Not sure which is the right approach here; maybe just do the first one since I've already started, and in "conclusions" or whatever note the other way to do it; but BOTTOM LINE is keep the question in mind and make sure it has been answered -- there may be another answer that some one else thinks is more "analytically correct", but does MY answer also provide something useful?  this is important to remember
 
+the options in brief are, see which covariates that appear meaningful to MPG wash out in ANOVA and then look at the interaction on those covariates, or see which covariates appear to have a meaningful am dimension to them and then see which wash out in ANOVA from that group.
+
+Argument for option 1: focuses on the things which most significantly affect mpg, which is the "outcome" we care about
+Argument for option 2: focuses on the things that am most significantly affects, which is the "variable" we care about
+
+```{r}
+#base set from exploration
+lmex <- lm(mpg~cyl + disp + drat + qsec + gear + carb, data=mtcars)
+#winnow 1
+lmex2 <- lm(mpg~carb + disp + gear + drat, data=mtcars)
+#winnow 2
+lmex3 <- lm(mpg~carb + disp + gear, data=mtcars)
+## everything now significant
+```
+
+```{r}
+#reconfirm with ANOVA
+testfit1 <- lm(mpg~carb + disp + gear, data=mtcars)
+testfit2 <- lm(mpg~carb + disp + gear + drat, data=mtcars)
+testfit3 <- lm(mpg~carb + disp + gear + drat + qsec, data=mtcars)
+anova(testfit1, testfit2, testfit3)
+```
