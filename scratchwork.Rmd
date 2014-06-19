@@ -2,3 +2,41 @@ Scratch work / exploratory graphs / rough conclusions re: Motor Trend MPG data a
 ===================================
 
 ## things to go here
+
+```{r}
+#qplot(mtcars$disp, mtcars$mpg, color=mtcars$am)
+plot(mtcars$disp, mtcars$mpg, col=ifelse(mtcars$am==1, "salmon", "steelblue"), pch=19)
+```
+
+looks like different slopes for auto and manual wrt displacement
+
+```{r}
+plot(mtcars$cyl, mtcars$mpg, col=ifelse(mtcars$am==1, "salmon", "steelblue"), pch=19)
+abline(lm(mpg~cyl, data=subset(mtcars, mtcars$am==1)))
+abline(lm(mpg~cyl, data=subset(mtcars, mtcars$am==0)))
+```
+
+this plots mpg by cylinder with individual regression lines for each transmission type; looks different
+
+```{r}
+lmtest <- lm(mpg~am*cyl + am*disp + am*hp + am*drat + am*wt + am*qsec + am*vs + am*gear + am*carb, data=mtcars)
+summary(lmtest)
+```
+
+examine this in greater detail - fits interaction of am with everything else -- not sure if this is theoretically valid, but may reveal some relationships (?)
+
+```{r}
+pairs(mtcars[,-9], panel=panel.smooth, col=ifelse(mtcars$am==1, "salmon", "steelblue"), pch=19)
+```
+
+Again, not entirely sure what I am looking for here; need to clear my head on this
+
+### START WITH THE BASICS:
+```{r}
+plot(mtcars$am, mtcars$mpg, pch=19, col=ifelse(mtcars$am==1, "salmon", "steelblue"))
+lmobvious <- lm(mpg~am, data=mtcars)
+abline(lmobvious, lwd=2)
+```
+
+Analysis: the basic model provides a basic answer, there is a clearly significant effect.  However, we probably care not so much that there is a general effect, but what OTHER variables relate to this.  Work from this as the starting point, then get fancier with the multivariate regression analysis using something like ANOVA to determine a reasonable model that accounts for other features of the data without "overfitting", essentially.  OCCAM's RAZOR.
+
