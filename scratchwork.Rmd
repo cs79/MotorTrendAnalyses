@@ -79,3 +79,9 @@ testfit2 <- lm(mpg~carb + disp + gear + drat, data=mtcars)
 testfit3 <- lm(mpg~carb + disp + gear + drat + qsec, data=mtcars)
 anova(testfit1, testfit2, testfit3)
 ```
+
+```{r}
+finMod <- lm(mpg~ am*carb + am*disp + am*gear, data=mtcars)
+```
+
+interpreting this is tricky - use WHO example as a guide - word CAREFULLY

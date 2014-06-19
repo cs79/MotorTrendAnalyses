@@ -36,19 +36,51 @@ Before going in to our model building, we may already be able to tell that some 
 
 There are two broad approaches we could take to building models, based on our exploration so far.  The first approach involves focusing on the variables which most significantly affect MPG in a multivariate analysis and then modeling the interaction of transmission type with those variables to see its effect on MPG through them.  The second approach would be to focus on the non-MPG variables that have the most significant interaction with the transmission variable, and then model based on those.  We will use the first approach to keep our focus on the outcome of interest (MPG), with the understanding that the second may provide additional insights if performed as well.
 
-### Building our models: variable winnowing
+### Building our models: model selection through variable winnowing
 
+We use a winnowing approach to determine a model with "most significant" features, based on our exploration.  Our base model including the features we identified during exploration is then:
+```{r}
+lmex <- lm(mpg~cyl + disp + drat + qsec + gear + carb, data=mtcars)
+```
+The coefficients for this model are: 
+```{r, echo=FALSE}
+summary(lmex)$coefficients
+```
+Now we winnow the model down, discarding the least significant coefficients, number of cylinders and quarter mile time -- unsurprisingly two that could be ruled out either in exploration of the pairs plot or based on logical reasoning.  Our next model becomes:
+```{r}
+lmex2 <- lm(mpg~carb + disp + gear + drat, data=mtcars)
+```
+Looking at the coefficients, we see that two are now significant, number of carburetors and displacement:
+```{r, echo=FALSE}
+summary(lmex2)$coefficients
+```
+Winnowing again by discarding rear axle ratio from the model, we achieve a model with only significant coefficients:
+```{r, echo=FALSE}
+lmex3 <- lm(mpg~carb + disp + gear, data=mtcars)
+summary(lmex3)$coefficients
+```
+We can confirm the appropriateness of our winnowing based on the subset of variables identified during exploration using ANOVA:
+```{r, echo=FALSE}
+## push to Appendix if space-constrained
+testfit1 <- lm(mpg~carb + disp + gear, data=mtcars)
+testfit2 <- lm(mpg~carb + disp + gear + drat, data=mtcars)
+testfit3 <- lm(mpg~carb + disp + gear + drat + qsec, data=mtcars)
+anova(testfit1, testfit2, testfit3)
+```
+Note that the P-value drops into insignificant territory after adding back the rear axle ratio variable to our winnowed model, indicating that it should not be included in the model, nor should quarter mile time.
 
+### Final model with interactions
 
-based on exploration, we can "guess" at the order in which variables might have importance; we can build some "adjusted" and "unadjusted" models here
+The model suggested by our winnowing process with the "most significant" coefficients impacting MPG is:
+```{r,eval=FALSE}
+lm(mpg~carb + disp + gear, data=mtcars)
+```
+Our final model, based on this winnowed model, is the winnowed model including interactions with transmission for every term:
+```{r}
+finMod <- lm(mpg~ am*carb + am*disp + am*gear, data=mtcars)
+```
 
-***Think about how interactions work here... is "am" a dummy variable? seems like it should be.
-
-### Model selection with interactions
-
-<using ANOVA or similar method based on prior section ? >
-
-clearly denote "final model"
+clearly denote why this is the "final model" - what it describes (top factors affecting mpg, with effects separated by am)
 
 ## Analysis and Conclusions
 
@@ -58,9 +90,10 @@ interpret the coefficients of the final multivariate model correctly; reiterate 
 
 residual plot, other diagnostics - think about this
 
-## [make sure not missing anything else from grading rubric!] - put github repo link here maybe, or at top of appendix
+## [make sure not missing anything else from grading rubric!]
 
-## Appendix: Graphical Figures
+## Appendix
+Figures referred to in the report can be found here.  In addition, the source code for this report can be found in the following GitHub repository: https://github.com/cs79/MotorTrendAnalyses
 
 #### Figure 1
 ```{r, echo=FALSE}
