@@ -1,5 +1,9 @@
 Scratch work / exploratory graphs / rough conclusions re: Motor Trend MPG data analysis
 ===================================
+```{r}
+library(datasets)
+data(mtcars)
+```
 
 ## things to go here
 
@@ -33,7 +37,8 @@ Again, not entirely sure what I am looking for here; need to clear my head on th
 
 ### START WITH THE BASICS:
 ```{r}
-plot(mtcars$am, mtcars$mpg, pch=19, col=ifelse(mtcars$am==1, "salmon", "steelblue"))
+plot(mtcars$am, mtcars$mpg, pch=19, col=ifelse(mtcars$am==1, "salmon", "steelblue"), xlab="Transmission Type", ylab="Miles per Gallon", main="MPG by Transmission Type")
+legend("topleft", fill=c("steelblue", "salmon"), legend=c("Automatic", "Manual"))
 lmobvious <- lm(mpg~am, data=mtcars)
 abline(lmobvious, lwd=2)
 ```

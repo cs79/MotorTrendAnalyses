@@ -1,6 +1,5 @@
-Motor Trend Analysis of MPG covariates between Manual and Automatic Transmission Cars
-(think of a better title)
-=================================================================
+Motor Trend Analysis of MPG covariates between Manual and Automatic Transmission Cars (think of a better title)
+=====================================================================================
 ```{r,echo=FALSE}
 library(datasets)
 data(mtcars)
@@ -18,21 +17,22 @@ Before embarking on our deeper analysis and drawing conclusions from our data, w
 
 ### Starting from the beginning: Looking at MPG and transmission type
 
-Since our questions of interest relate to potential differences in cars' MPG by car transmission type (automatic or manual), we start with these two variables.  Plotting MPG against transmission type and fitting a linear model shows a significant difference between the slope and zero, as seen in the R output below.  The slope here is interpreted as the increase in expected MPG, going from an automatic transmission (am=0 in the dataset) to a manual transmission (am=1 in the dataset).
+Since our questions of interest relate to potential differences in cars' MPG by car transmission type (automatic or manual), we start with these two variables.  Plotting MPG against transmission type and fitting a linear model shows a significant difference between the slope and zero, as seen in the R output below.  This is equivalent to testing the hypothesis that the means of MPG between the transmission types are significantly different from one another, which is clear in **Figure 1** in the Appendix.  The slope here is interpreted as the increase in expected MPG, going from an automatic transmission (am=0 in the dataset) to a manual transmission (am=1 in the dataset).  
 
-```{r}
+```{r, echo=FALSE}
 lmobvious <- lm(mpg~am, data=mtcars)
 summary(lmobvious)$coefficients
 ```
 
-Now that we know this, we can try to dig deeper into the data and find out more specifically what is driving this effect.
+So we can see that we would expect to see about a 7 MPG fuel efficiency increase, on average, moving from an automatic to manual transmission.  Now that we know this, we can try to dig deeper into the data and find out more specifically what is driving this effect.
 
 ### Digging deeper
 
-To help us try to find what covariates might have the most significant impact on the relationship between transmission type and MPG, we can look at a pairs plot of all of the data we have available, keeping an eye out for two things: what variables have a noticeable relationship to MPG, and in which cases is that relationship informed by transmission type?  The pairs plot can be seen in [Figure XX] in the Appendix.
+To help us try to find what covariates might have the most significant impact on the relationship between transmission type and MPG, we can look at a pairs plot of all of the data we have available, keeping an eye out for two things: what variables have a noticeable relationship to MPG, and in which cases is that relationship informed by transmission type?  The pairs plot can be seen in **Figure 2** in the Appendix.
 
-<analysis of pairs plot per what was just stated>
+While harder to discern in the smaller report output, the pairwise plots against MPG for displacement (engine size), rear axle ratio, quarter mile time, number of forward gears, number of carburetors, and possibly number of cylinders appear to show the type of relationship we are interested in: related to MPG, but with a clear separation in the data as they relate to MPG by transmission type. 
 
+Before going in to our model building, we may already be able to tell that some of these features are less interesting than others.  For example, a car's quarter mile time is likely to be highly correlated with things like engine size and number of cylinders, and possibly several of the others -- even for someone who knows less about the inner workings of cars and prefers to admire them for their styling, it is logical that quarter mile time would be more of an effect in the data than a cause.  There may be other relationships between these particular variables that have similar information overlaps and may not be necessary to include in a parsimonious model.
 
 ## Model Selection
 
@@ -42,7 +42,7 @@ To help us try to find what covariates might have the most significant impact on
 
 based on exploration, we can "guess" at the order in which variables might have importance; we can build some "adjusted" and "unadjusted" models here
 
-Think about how interactions work here... is "am" a dummy variable? seems like it should be.
+***Think about how interactions work here... is "am" a dummy variable? seems like it should be.
 
 ### Model selection
 
@@ -56,5 +56,22 @@ interpret the coefficients of the multivariate model correctly; reiterate the an
 
 residual plot, other diagnostics - think about this
 
-## [make sure not missing anything else from grading rubric]
+## [make sure not missing anything else from grading rubric!]
+
+## Appendix: Graphical Figures
+
+#### Figure 1
+```{r, echo=FALSE}
+plot(mtcars$am, mtcars$mpg, pch=19, col=ifelse(mtcars$am==1, "salmon", "steelblue"), xlab="Transmission Type", ylab="Miles per Gallon", main="MPG by Transmission Type")
+legend("topleft", fill=c("steelblue", "salmon"), legend=c("Automatic", "Manual"))
+lmobvious <- lm(mpg~am, data=mtcars)
+abline(lmobvious, lwd=2)
+```
+
+#### Figure 2
+```{r, echo=FALSE}
+pairs(mtcars[,-9], panel=panel.smooth, col=ifelse(mtcars$am==1, "salmon", "steelblue"), pch=19)
+```
+
+#### Figure 3
 
