@@ -1,24 +1,60 @@
 Motor Trend Analysis of MPG covariates between Manual and Automatic Transmission Cars
 (think of a better title)
 =================================================================
+```{r,echo=FALSE}
+library(datasets)
+data(mtcars)
+```
 
 ## Executive Summary
 
+Broadest conclusion (yes there is an association between transmision type and MPG); sumary of breakdown by features that impact this relationship.
+
 ## Exploration
 
-detail the summary of what was done, but don't put a lot of graphics here -- maybe a couple of important ones; put the rest in the annex
+Before embarking on our deeper analysis and drawing conclusions from our data, we can start with some exploration to gain some basic understanding of the MPG covariates and glean hints of some of the relationships that may exist in the data.
+
+[detail the summary of what was done, but don't put a lot of graphics here -- maybe a couple of important ones; put the rest in the annex]
+
+### Starting from the beginning: Looking at MPG and transmission type
+
+Since our questions of interest relate to potential differences in cars' MPG by car transmission type (automatic or manual), we start with these two variables.  Plotting MPG against transmission type and fitting a linear model shows a significant difference between the slope and zero, as seen in the R output below.  The slope here is interpreted as the increase in expected MPG, going from an automatic transmission (am=0 in the dataset) to a manual transmission (am=1 in the dataset).
+
+```{r}
+lmobvious <- lm(mpg~am, data=mtcars)
+summary(lmobvious)$coefficients
+```
+
+Now that we know this, we can try to dig deeper into the data and find out more specifically what is driving this effect.
+
+### Digging deeper
+
+To help us try to find what covariates might have the most significant impact on the relationship between transmission type and MPG, we can look at a pairs plot of all of the data we have available, keeping an eye out for two things: what variables have a noticeable relationship to MPG, and in which cases is that relationship informed by transmission type?  The pairs plot can be seen in [Figure XX] in the Appendix.
+
+<analysis of pairs plot per what was just stated>
+
 
 ## Model Selection
 
-explain why the model chosen was the one chosen
+[explain why the model chosen was the one chosen]
+
+### Building our models
+
+based on exploration, we can "guess" at the order in which variables might have importance; we can build some "adjusted" and "unadjusted" models here
+
+Think about how interactions work here... is "am" a dummy variable? seems like it should be.
+
+### Model selection
+
+<using ANOVA or similar method based on prior section ? >
 
 ## Analysis and Conclusions
 
-interpret the coefficients correctly; answer the 2 questions of interest; quantify the uncertainty in conclusions
+interpret the coefficients of the multivariate model correctly; reiterate the answer to the 2 questions of interest; quantify the uncertainty in conclusions <how to do this? CI?>
 
 ## Ex-post Diagnostics
 
 residual plot, other diagnostics - think about this
 
-## make sure not missing anything else from grading rubric
+## [make sure not missing anything else from grading rubric]
 
