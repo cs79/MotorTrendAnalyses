@@ -85,3 +85,19 @@ finMod <- lm(mpg~ am*carb + am*disp + am*gear, data=mtcars)
 ```
 
 interpreting this is tricky - use WHO example as a guide - word CAREFULLY
+
+when noting the thing about displacement being the most obviously significant thing, this plot may be handy (add lines, legend, titles):
+```{r}
+plot(mtcars$disp, mtcars$mpg, pch=19, col=ifelse(mtcars$am==1, "salmon", "steelblue"))
+```
+note that displacement on its own is hugely significant as a predictor of MPG: 
+```{r}
+testlm <- lm(mpg~disp, data=mtcars)
+```
+and that a model of just the interaction between disp and am is significant on everything
+```{r}
+testlm2 <- lm(mpg~disp*am, data=mtcars)
+```
+this may be all that we really need to answer the question, and maybe this one interaction is our "final final" model
+
+

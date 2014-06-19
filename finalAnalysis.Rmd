@@ -1,101 +1,97 @@
-Motor Trend Analysis of MPG covariates between Manual and Automatic Transmission Cars (think of a better title)
-=====================================================================================
+<span font-size=0.5em, line-height=0.5>
+<h3>Motor Trend Analysis of MPG Covariates by Transmission Type</h3>
+Source code used for analysis available at: https://github.com/cs79/MotorTrendAnalyses
 ```{r,echo=FALSE}
 library(datasets)
 data(mtcars)
 ```
 
-## Executive Summary
+#### Executive Summary
 
 [Broadest conclusion (yes there is an association between transmision type and MPG); sumary of breakdown by features that impact this relationship. - 1 Paragraph]
 
-## Exploration
+#### Exploration
 
-Before embarking on our deeper analysis and drawing conclusions from our data, we can start with some exploration to gain some basic understanding of the MPG covariates and glean hints of some of the relationships that may exist in the data.
+Before embarking on our deeper analysis and drawing conclusions from our data, we can start with some exploration to gain some basic understanding of the MPG covariates and glean hints of some of the relationships that may exist in the data.  Since our questions of interest relate to potential differences in cars' MPG by car transmission type (automatic or manual), we start with these two variables.  Plotting MPG against transmission type and fitting a linear model shows a significant difference between the slope and zero, which is clear in **Figure 1** in the Appendix.  The slope here is interpreted as the increase in expected MPG, going from an automatic transmission (am=0 in the dataset) to a manual transmission (am=1).  We find based on the model that we would expect to see about a 7 MPG fuel efficiency increase, on average, moving from an automatic to manual transmission.  Now that we know this, we can try to dig deeper into the data and find out more specifically what is driving this effect.
 
-### Starting from the beginning: Looking at MPG and transmission type
-
-Since our questions of interest relate to potential differences in cars' MPG by car transmission type (automatic or manual), we start with these two variables.  Plotting MPG against transmission type and fitting a linear model shows a significant difference between the slope and zero, as seen in the R output below.  This is equivalent to testing the hypothesis that the means of MPG between the transmission types are significantly different from one another, which is clear in **Figure 1** in the Appendix.  The slope here is interpreted as the increase in expected MPG, going from an automatic transmission (am=0 in the dataset) to a manual transmission (am=1 in the dataset).  
-
-```{r, echo=FALSE}
+```{r, echo=FALSE, results='hide'}
 lmobvious <- lm(mpg~am, data=mtcars)
 summary(lmobvious)$coefficients
 ```
+To help us try to find what covariates might have the most significant impact on the relationship between transmission type and MPG, we can look at a pairs plot of all of the data we have available, keeping an eye out for two things: what variables have a noticeable relationship to MPG, and in which cases is that relationship informed by transmission type?  The pairs plot in **Figure 2** of the Appendix, while harder to discern in the smaller report output, indicates that displacement, rear axle ratio, quarter mile time, number of forward gears, number of carburetors, and possibly number of cylinders appear to show the type of relationship we are interested in: related to MPG, but with a discernable visual separation in the data as they relate to MPG by transmission type. 
 
-So we can see that we would expect to see about a 7 MPG fuel efficiency increase, on average, moving from an automatic to manual transmission.  Now that we know this, we can try to dig deeper into the data and find out more specifically what is driving this effect.
+Prior to our model building, we may already be able to tell that some of these features are less interesting than others.  For example, a car's quarter mile time would logically be likely correlated with things like engine size and number of cylinders, and possibly several of the others -- it is more of an effect in the data than a cause.  There may be other relationships between these particular variables that have similar information overlaps and may not be necessary to include in a parsimonious model.
 
-### Digging deeper
-
-To help us try to find what covariates might have the most significant impact on the relationship between transmission type and MPG, we can look at a pairs plot of all of the data we have available, keeping an eye out for two things: what variables have a noticeable relationship to MPG, and in which cases is that relationship informed by transmission type?  The pairs plot can be seen in **Figure 2** in the Appendix.
-
-While harder to discern in the smaller report output, the pairwise plots against MPG for displacement (engine size), rear axle ratio, quarter mile time, number of forward gears, number of carburetors, and possibly number of cylinders appear to show the type of relationship we are interested in: related to MPG, but with a clear separation in the data as they relate to MPG by transmission type. 
-
-Before going in to our model building, we may already be able to tell that some of these features are less interesting than others.  For example, a car's quarter mile time is likely to be highly correlated with things like engine size and number of cylinders, and possibly several of the others -- even for someone who knows less about the inner workings of cars and prefers to admire them for their styling, it is logical that quarter mile time would be more of an effect in the data than a cause.  There may be other relationships between these particular variables that have similar information overlaps and may not be necessary to include in a parsimonious model.
-
-## Model Selection
+#### Model Selection
 
 There are two broad approaches we could take to building models, based on our exploration so far.  The first approach involves focusing on the variables which most significantly affect MPG in a multivariate analysis and then modeling the interaction of transmission type with those variables to see its effect on MPG through them.  The second approach would be to focus on the non-MPG variables that have the most significant interaction with the transmission variable, and then model based on those.  We will use the first approach to keep our focus on the outcome of interest (MPG), with the understanding that the second may provide additional insights if performed as well.
 
-### Building our models: model selection through variable winnowing
+##### Building our models: model selection through variable winnowing
 
-We use a winnowing approach to determine a model with "most significant" features, based on our exploration.  Our base model including the features we identified during exploration is then:
-```{r}
+We use a winnowing approach to determine a model with "most significant" features, based on our exploration.  Our base model including the features we identified during exploration (cyl, disp, drat, qsec, gear, and carb in the dataset).
+
+```{r, echo=FALSE, eval=FALSE}
+#base model based on exploration
 lmex <- lm(mpg~cyl + disp + drat + qsec + gear + carb, data=mtcars)
-```
-The coefficients for this model are: 
-```{r, echo=FALSE}
 summary(lmex)$coefficients
 ```
-Now we winnow the model down, discarding the least significant coefficients, number of cylinders and quarter mile time -- unsurprisingly two that could be ruled out either in exploration of the pairs plot or based on logical reasoning.  Our next model becomes:
-```{r}
+Now we winnow the model down, discarding the least significant coefficients, number of cylinders and quarter mile time -- unsurprisingly two that could be ruled out either in exploration of the pairs plot or based on logical reasoning.  Winnowing again through the same process, our next model (which now has two significant coefficients, number of carburetors and displacement) causes us to discard rear axle ratio, leaving us with a model that has ONLY significant coefficients (carb, disp, and gear in the dataset).
+```{r, echo=FALSE, eval=FALSE}
+#winnow 1
 lmex2 <- lm(mpg~carb + disp + gear + drat, data=mtcars)
-```
-Looking at the coefficients, we see that two are now significant, number of carburetors and displacement:
-```{r, echo=FALSE}
 summary(lmex2)$coefficients
 ```
-Winnowing again by discarding rear axle ratio from the model, we achieve a model with only significant coefficients:
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 lmex3 <- lm(mpg~carb + disp + gear, data=mtcars)
 summary(lmex3)$coefficients
 ```
-We can confirm the appropriateness of our winnowing based on the subset of variables identified during exploration using ANOVA:
-```{r, echo=FALSE}
-## push to Appendix if space-constrained
+
+We can confirm the appropriateness of our winnowing based on the subset of variables identified during exploration using ANOVA; P-values for adding back terms that got winnowed out through our process are not significant.
+```{r, echo=FALSE, eval=FALSE}
 testfit1 <- lm(mpg~carb + disp + gear, data=mtcars)
 testfit2 <- lm(mpg~carb + disp + gear + drat, data=mtcars)
 testfit3 <- lm(mpg~carb + disp + gear + drat + qsec, data=mtcars)
 anova(testfit1, testfit2, testfit3)
 ```
-Note that the P-value drops into insignificant territory after adding back the rear axle ratio variable to our winnowed model, indicating that it should not be included in the model, nor should quarter mile time.
 
-### Final model with interactions
+##### Final winnowed model with interactions
 
-The model suggested by our winnowing process with the "most significant" coefficients impacting MPG is:
-```{r,eval=FALSE}
+Using the model suggested by our winnowing process with the "most significant" coefficients impacting MPG, we can include interaction terms for each covariate with transmission type.
+```{r, echo=FALSE, eval=FALSE}
+#most significant winnowed model
 lm(mpg~carb + disp + gear, data=mtcars)
 ```
-Our final model, based on this winnowed model, is the winnowed model including interactions with transmission for every term:
-```{r}
+```{r, echo=FALSE}
+#final winnowed model with interactions
 finMod <- lm(mpg~ am*carb + am*disp + am*gear, data=mtcars)
 ```
+This final model for our analysis describes the top features in our dataset informing MPG, with their effects on MPG separated by transmission type.  The interpretation of the model is below.
 
-clearly denote why this is the "final model" - what it describes (top factors affecting mpg, with effects separated by am)
+#### Analysis and Conclusions
 
-## Analysis and Conclusions
+##### Interpreting our coefficients
+The coefficients for our final model are as follows:
+```{r, echo=FALSE}
+summary(finMod)$coefficients
+```
 
-interpret the coefficients of the final multivariate model correctly; reiterate the answer to the 2 questions of interest; quantify the uncertainty in conclusions <how to do this? CI?>
+interpret the coefficients of the final multivariate model correctly - note, interestingly, that the only significant difference in here when considering a "split" on transmission type is displacement -- everything boils down to engine size when it comes to analyzing mpg, apparently; 
 
-## Ex-post Diagnostics
 
-residual plot, other diagnostics - think about this
+reiterate the answer to the 2 questions of interest; quantify the uncertainty in conclusions <how to do this? CI?>
 
-## [make sure not missing anything else from grading rubric!]
+##### A final simplification from our analysis
 
-## Appendix
-Figures referred to in the report can be found here.  In addition, the source code for this report can be found in the following GitHub repository: https://github.com/cs79/MotorTrendAnalyses
+single interaction, disp*am
 
-#### Figure 1
+#### Ex-post Diagnostics
+
+residual plot (in appendix), other diagnostics - think about this
+
+#### Appendix
+Figures referred to in the report can be found here.  In addition, the source code for this report can be found in the following GitHub repository: 
+
+##### Figure 1
 ```{r, echo=FALSE}
 plot(mtcars$am, mtcars$mpg, pch=19, col=ifelse(mtcars$am==1, "salmon", "steelblue"), xlab="Transmission Type", ylab="Miles per Gallon", main="MPG by Transmission Type")
 legend("topleft", fill=c("steelblue", "salmon"), legend=c("Automatic", "Manual"))
@@ -103,10 +99,12 @@ lmobvious <- lm(mpg~am, data=mtcars)
 abline(lmobvious, lwd=2)
 ```
 
-#### Figure 2
+##### Figure 2
+fix the dimensions on this guy - hard code a pixel ratio
 ```{r, echo=FALSE}
 pairs(mtcars[,-9], panel=panel.smooth, col=ifelse(mtcars$am==1, "salmon", "steelblue"), pch=19)
 ```
 
-#### Figure 3
+##### Figure 3
 
+</em>
