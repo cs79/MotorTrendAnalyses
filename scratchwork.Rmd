@@ -88,7 +88,10 @@ interpreting this is tricky - use WHO example as a guide - word CAREFULLY
 
 when noting the thing about displacement being the most obviously significant thing, this plot may be handy (add lines, legend, titles):
 ```{r}
-plot(mtcars$disp, mtcars$mpg, pch=19, col=ifelse(mtcars$am==1, "salmon", "steelblue"))
+plot(mtcars$disp, mtcars$mpg, pch=19, col=ifelse(mtcars$am==1, "salmon", "steelblue"), main="MPG by Engine Displacement and Transmission Type", xlab="Displacement", ylab="MPG")
+abline(lm(mpg~disp, data=subset(mtcars, mtcars$am==1)), col="red", lwd=2)
+abline(lm(mpg~disp, data=subset(mtcars, mtcars$am==0)), col="blue", lwd=2)
+legend("topright", fill=c("steelblue", "salmon"), legend=c("Automatic", "Manual"))
 ```
 note that displacement on its own is hugely significant as a predictor of MPG: 
 ```{r}
