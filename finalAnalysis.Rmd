@@ -8,7 +8,7 @@ data(mtcars)
 
 #### Executive Summary
 
-[Broadest conclusion (yes there is an association between transmision type and MPG); sumary of breakdown by features that impact this relationship. - 1 Paragraph]
+In this report we explore data on a variety of car models with associated parameters, and construct linear models of fuel efficiency (MPG) as it relates in various ways to transmission type (automatic or manual).  Broadly, we find that manual transmission cars are more fuel-efficient than automatics by expectation of about 7 MPG on average, and through guided model construction we find that the primary feature through which expected MPG is significantly influenced by transmission type is engine displacement.  Models and summary outputs are all available in the source code on GitHub (link above).
 
 #### Exploration
 
@@ -73,13 +73,16 @@ testlm2 <- lm(mpg~disp*am, data=mtcars)
 
 #### Conclusions and Ex-post Diagnostics
 
-To answer our questions, lskdgjlfdkjglfdkjg
+To answer our questions, our analysis shows that a manual transmission is, on average, better for MPG efficiency; we quantified this earlier using the simple linear model relating just these two variables and saw that the MPG increase switching from automatic to manual transmission is about 7.2.  We can also quantify the certainty of our estimate using the Standard Error from our model; we are 95% certain that the true value of the difference is between 4.3 and 10.2 for these data.  We can calculate quantities for our final winnowed model and the simplified interaction model similarly, using the interpretation of coefficients from the section above.
+```{r, echo=FALSE, eval=FALSE}
+#95% Confidence Interval based on 30 df in mtcars data for a model of mpg ~ am
+7.245 - qt(.95, 30)*1.764; 7.245 + qt(.95, 30)*1.764
+```
 
-reiterate the answer to the 2 questions of interest; quantify the uncertainty in conclusions <how to do this? CI?>
-residual plot
+Finally, we can run a quick diagnostic on our models using residual plots.  These can be seen in __Figures 4 - 6__.  All of the plots are appropriately random, indicating that the model variables are not being confounded.
 
-#### Appendix
-Figures referred to in the report can be found here.  In addition, the source code for this report can be found in the following GitHub repository: 
+<br><br><br>
+<h4>Appendix</h4>
 
 ##### Figure 1
 ```{r, echo=FALSE}
@@ -100,6 +103,21 @@ plot(mtcars$disp, mtcars$mpg, pch=19, col=ifelse(mtcars$am==1, "salmon", "steelb
 abline(lm(mpg~disp, data=subset(mtcars, mtcars$am==1)), col="red", lwd=2)
 abline(lm(mpg~disp, data=subset(mtcars, mtcars$am==0)), col="blue", lwd=2)
 legend("topright", fill=c("steelblue", "salmon"), legend=c("Automatic", "Manual"))
+```
+
+##### Figure 4
+```{r, echo=FALSE}
+plot(resid(lm(mpg~am, data=mtcars)), main="Residual Plot: MPG by Transmission Type", ylab="Residuals")
+```
+
+##### Figure 5
+```{r, echo=FALSE}
+plot(resid(lm(mpg~am*carb + am*disp + am*gear, data=mtcars)), main="Residual Plot: Final Winnowed Model", ylab="Residuals")
+```
+
+##### Figure 6
+```{r, echo=FALSE}
+plot(resid(lm(mpg~am*disp, data=mtcars)), main="Residual Plot: MPG by Displacement interacted with Transmission Type", ylab="Residuals")
 ```
 
 </em>
